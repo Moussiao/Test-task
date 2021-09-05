@@ -47,6 +47,15 @@ class GetUser(DetailView):
         context = super().get_context_data(**kwargs)  # Получаем context у предка
         context['title'] = context['user']
 
+        context['show_data'] = {
+            'ID': context['user'].pk,
+            'Username': context['user'].username,
+            'Имя': context['user'].name,
+            'Номер телефона': context['user'].phone_number,
+            'Адрес': context['user'].user_address,
+            'Email': context['user'].email
+        }
+
         # Последние 8 постов пользователя, сортированных по дате создания, от новых к более поздним
         context['posts'] = Post.objects.filter(user_id=self.kwargs['pk']).order_by('-created_at')[:8]
 
@@ -69,7 +78,7 @@ class UserPostsDynamicLoad(View):
         """
         Принимает GET запрос и возвращает сформированный ответ в зависимости от считанной информации.
 
-        Сначала мы считываем полученные данные, после чего получаем список еще не загруженых постов.
+        Сначала мы считываем полученные данные, после чего получаем список еще не загруженных постов.
         Если список не пуст, то возвращаем данные о полученных постах
         Если список пуст, то возвращаем False.
         """
@@ -121,3 +130,6 @@ class ShowPost(DetailView):
         context['title'] = context['post']
 
         return context
+
+    def get_queryset(self):
+        return Post.objects.all().select_related('user')

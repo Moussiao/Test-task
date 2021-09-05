@@ -1,9 +1,11 @@
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+    display: flex;
     width: 100%;
-    color: #444;
+    height: 100%;
+    min-height: 100vh;
+    color: rgba(24, 35, 89, 0.85);
+    background-color: #e9ecef;
+    font-weight: 400;
 }
 
 a {
@@ -17,103 +19,273 @@ a:hover {
 }
 
 img {
-    max-width: 600px;
+    max-width: 800px;
     height: auto;
 }
 
+footer {
+    height: 25px;
+}
 
-.table-page {
+.page-wrapper {
     width: 100%;
-    height: 100%;
-    vertical-align: top;
-}
-
-.table-page tr {
-    height: 100%;
-}
-
-.clear {
-    clear: both;
-}
-
-.header {
-    background: #3F4137;
-    height: 60px;
-}
-
-.table-content {
-    width: 100%;
-    min-height: 100%;
-    height: 100%;
-}
-
-.left-chapters {
-    margin: 0;
-    background: #eee;
-    border-right: 1px solid #ccc;
-    min-height: 100%;
-}
-
-.left-chapters ul {
-    width: 230px;
-    min-height: 100%;
-    margin: 0;
-    padding: 20px 10px 10px 20px;
-    list-style: none;
-    font-size: 20px;
-}
-
-.left-chapters ul li {
-    margin: 30px 0 0 0;
-    color: #999;
-}
-
-.left-chapters ul li.selected {
-    color: #0059b2;
-}
-
-.left-chapters ul li a {
-    color: #444;
-    text-decoration: none;
-}
-
-.left-chapters ul li a:hover {
-    color: #CC0000;
-}
-
-.left-chapters ul li.share {
-    margin: 60px 0 0 0;
-}
-
-.left-chapters ul li.share p {
-    margin: 30px 0 30px 0;
-}
-
-.left-chapters ul li.share a {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    margin: 0 20px 0 0;
-}
-
-.left-chapters ul li.share a.share-yt {
-    width: 100%;
-    height: 30px;
-    background: url('../../../../../../../../Обучение/Django/selfedu/8 (Debug Toolbar, Кэширование, Каптча, Тонкая настройка админ панели)/coolsite/women/static/women/images/share_yt.png') no-repeat 0 0
-}
-
-.left-chapters ul li.share a.share-yt:hover {
-    width: 100%;
-    height: 30px;
-    background: url('../../../../../../../../Обучение/Django/selfedu/8 (Debug Toolbar, Кэширование, Каптча, Тонкая настройка админ панели)/coolsite/women/static/women/images/share_yt.png') no-repeat 0 -30px
+    display: flex;
+    flex: 1;
+    flex-direction: column;
 }
 
 .content {
-    padding: 40px 20px 20px 40px;
-    width: 100%;
-    box-sizing: border-box;
+    flex: 1;
+    display: flex !important;
+    flex-direction: column;
+    box-shadow: none;
+    -webkit-transition: all .3s;
 }
 
+.form-control-dark {
+    color: #fff;
+    background-color: #212529;
+    border-color: #6c757d;
+}
+
+.form-control-dark:focus {
+  color: #fff;
+  background-color: #212529;
+  border-color: #fff;
+  box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+}
+
+.card {
+    background: #fff;
+    transition: .5s;
+    border: 0;
+    margin-bottom: 30px;
+    border-radius: .55rem;
+    position: relative;
+    width: 100%;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+}
+
+.card .body {
+    color: #444;
+    padding: 20px;
+    font-weight: 400;
+}
+
+.card .header {
+    color: #444;
+    padding: 20px;
+    position: relative;
+    box-shadow: none;
+}
+
+.single_post {
+    -webkit-transition: all .4s ease;
+    transition: all .4s ease
+}
+
+.single_post .body {
+    padding: 30px
+}
+
+.single_post .img-post {
+    position: relative;
+    overflow: hidden;
+    max-height: 500px;
+    margin-bottom: 30px
+}
+
+.single_post .img-post > img {
+    -ms-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+    -webkit-transition: -webkit-transform .4s ease, opacity .4s ease;
+    transition: transform .4s ease, opacity .4s ease;
+    max-width: 100%;
+    filter: none;
+    -webkit-filter: grayscale(0);
+    -webkit-transform: scale(1.01)
+}
+
+.single_post .img-post:hover img {
+    -webkit-transform: scale(1.02);
+    -ms-transform: scale(1.02);
+    transform: scale(1.02);
+    opacity: .7;
+    -webkit-filter: grayscale(1);
+    -webkit-transition: all .8s ease-in-out
+}
+
+.single_post .img-post:hover .social_share {
+    display: block
+}
+
+.single_post .footer {
+    padding: 0 30px 30px 30px
+}
+
+.single_post .footer .actions {
+    display: inline-block
+}
+
+.single_post .footer .stats {
+    cursor: default;
+    list-style: none;
+    padding: 0;
+    display: inline-block;
+    float: right;
+    margin: 0;
+    line-height: 35px
+}
+
+.single_post .footer .stats li {
+    border-left: solid 1px rgba(160, 160, 160, 0.3);
+    display: inline-block;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    line-height: 1;
+    margin: 0 0 0 2em;
+    padding: 0 0 0 2em;
+    text-transform: uppercase;
+    font-size: 13px
+}
+
+.single_post .footer .stats li a {
+    color: #777
+}
+
+.single_post .footer .stats li:first-child {
+    border-left: 0;
+    margin-left: 0;
+    padding-left: 0
+}
+
+.single_post h3 {
+    font-size: 20px;
+    text-transform: uppercase
+}
+
+.single_post h3 a {
+    color: #242424;
+    text-decoration: none
+}
+
+.single_post p {
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: 300;
+    margin: 0
+}
+
+.single_post .blockquote p {
+    margin-top: 0 !important
+}
+
+.single_post .meta {
+    list-style: none;
+    padding: 0;
+    margin: 0
+}
+
+.single_post .meta li {
+    display: inline-block;
+    margin-right: 15px
+}
+
+.single_post .meta li a {
+    font-style: italic;
+    color: #959595;
+    text-decoration: none;
+    font-size: 12px
+}
+
+.single_post .meta li a i {
+    margin-right: 6px;
+    font-size: 12px
+}
+
+.single_post2 {
+    overflow: hidden
+}
+
+.single_post2 .content {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding-left: 80px;
+    position: relative
+}
+
+.single_post2 .content .actions_sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px
+}
+
+.single_post2 .content .actions_sidebar a {
+    display: inline-block;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    margin-right: 0;
+    text-align: center;
+    border-right: 1px solid #e4eaec
+}
+
+.single_post2 .content .title {
+    font-weight: 100
+}
+
+.single_post2 .content .text {
+    font-size: 15px
+}
+
+.right-box .categories-clouds li {
+    display: inline-block;
+    margin-bottom: 5px
+}
+
+.right-box .categories-clouds li a {
+    display: block;
+    border: 1px solid;
+    padding: 6px 10px;
+    border-radius: 3px
+}
+
+@media (max-width: 640px) {
+    .blog-page .single_post .footer .stats {
+        float: none;
+        margin-top: 10px
+    }
+
+    .blog-page .single_post .body,
+    .blog-page .single_post .footer {
+        padding: 30px
+    }
+}
+
+.avatar {
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem
+}
+
+.avatar-xl {
+    border-radius: 50%;
+    padding: 5px;
+    width: 8rem;
+    height: 8rem
+}
+
+.avatar-xl:hover {
+    -webkit-transform: scale(1.02);
+    -ms-transform: scale(1.02);
+    transform: scale(1.02);
+    opacity: .7;
+    -webkit-filter: grayscale(1);
+    -webkit-transition: all .8s ease-in-out;
+    border-radius: 10px;
+}
 
 /* Pagination */
 .pagination {
