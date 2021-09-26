@@ -1,10 +1,17 @@
-from django.db.models import Count
+from django.contrib.auth import logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
+from django.db.models import Count, F
 from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.template.defaultfilters import date, time
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView
 
+from strange_posts.forms import LoginUserForm
 from strange_posts.models import Post, User
+from strange_posts.utils import get_db_filter_based_on_search_query
 
 
 class StrangePostsHome(ListView):
@@ -16,34 +23,45 @@ class StrangePostsHome(ListView):
     то мы сортируем посты по определенному значению
     """
     model = Post
-    template_name = 'strange_posts/index.html'
     context_object_name = 'posts'
     extra_context = {'title': 'Главная страница'}  # Статическая информация для шаблона
 
     paginate_by = 10  # Количество записей на странице
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        """Формируем и возвращаем информацию, которую передаем в шаблон"""
+        context = super().get_context_data(**kwargs)  # Получаем context у предка
+        context['search'] = self.request.GET.get('search')
+
+        return context
+
     def get_queryset(self):
+        search = self.request.GET.get('search')
         sort = self.request.GET.get('order_by')
+        cat = self.request.GET.get('cat')
         queryset = Post.objects.select_related('user')
 
-        if not sort:
-            return queryset
+        if search:
+            db_filter = get_db_filter_based_on_search_query(search)
+            if db_filter is not None:
+                queryset = queryset.filter(db_filter)
 
-        return queryset.order_by(sort)
+        if sort:
+            queryset = queryset.order_by(sort)
+
+        if cat:
+            queryset = queryset.filter(categories__slug=cat)
+
+        return queryset
 
 
-class GetUser(DetailView):
-    """
-    Возвращает ответ (response) с информацией о пользователе
-    """
+class GetUser(LoginRequiredMixin, DetailView):
+    """Информация о пользователе. Доступно только авторизированным пользователям"""
     model = User
-    template_name = 'strange_posts/get_user.html'
     context_object_name = 'user'
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        """
-        Формируем и возвращаем информацию, которую передаем в шаблон
-        """
+        """Формируем и возвращаем информацию, которую передаем в шаблон"""
         context = super().get_context_data(**kwargs)  # Получаем context у предка
         context['title'] = context['user']
 
@@ -115,21 +133,36 @@ class UserPostsDynamicLoad(View):
 
 
 class ShowPost(DetailView):
-    """
-    Возвращает ответ(response) с информацией о посте
-    """
+    """Возвращает ответ(response) с информацией о посте"""
     model = Post
-    template_name = 'strange_posts/post.html'
     context_object_name = 'post'
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        """
-        Формируем и возвращаем информацию, которую передаем в шаблон
-        """
+        """Формируем и возвращаем информацию, которую передаем в шаблон"""
         context = super().get_context_data(**kwargs)  # Получаем context у предка
         context['title'] = context['post']
+
+        # Увеличиваем количество просмотров у поста
+        context['views'] = context['post'].post_views
+        context['post'].post_views = F('post_views') + 1
+        context['post'].save()
+
+        # Самые популярные посты
+        context['popular_posts'] = Post.objects.all().order_by('-post_views')[:3]
 
         return context
 
     def get_queryset(self):
-        return Post.objects.all().select_related('user')
+        return Post.objects.all().select_related('user').prefetch_related('categories')
+
+
+class LoginUser(LoginView):
+    form_class = LoginUserForm
+
+    def get_success_url(self):
+        return reverse_lazy('home')
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('home')

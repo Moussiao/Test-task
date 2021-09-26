@@ -51,6 +51,7 @@ class User(TimeBaseModel):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255, verbose_name='Полное имя')
     username = models.CharField(max_length=100, unique=True, verbose_name='Имя пользователя')
+    photo = models.ImageField('Фотография', upload_to='users_photo/%Y/%m/%d', null=True)
     email = models.EmailField(verbose_name='Email')
     user_address = models.ForeignKey(UserAddress, on_delete=models.SET_NULL, null=True,
                                      verbose_name='Адрес пользователя')
@@ -70,6 +71,19 @@ class User(TimeBaseModel):
         return reverse('get_user', kwargs={'pk': self.pk})
 
 
+class PostCategory(models.Model):
+    """Категории для постов"""
+    name = models.CharField('Название', max_length=50)
+    slug = models.SlugField('URL', max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Категория для постов'
+        verbose_name_plural = 'Категории для постов'
+
+
 class Post(TimeBaseModel):
     """
     Модель содержащая информацию о посте, который привязан к определенному пользователю.
@@ -81,6 +95,8 @@ class Post(TimeBaseModel):
     title = models.CharField(max_length=255, verbose_name='Название поста')
     body = models.TextField(verbose_name='Текст поста')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор поста')
+    categories = models.ManyToManyField(PostCategory, default=[])
+    post_views = models.PositiveIntegerField('Количество просмотров', default=0)
 
     class Meta:
         verbose_name = 'Пост'
