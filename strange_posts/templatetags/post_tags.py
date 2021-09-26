@@ -24,6 +24,13 @@ def url_replace(request, field, value, direction=''):
             query_dict[field] = '-' + str(value)
         else:
             query_dict[field] = direction + str(value)
+
+    elif field == 'search' and field in query_dict.keys():
+        if value:
+            query_dict[field] = str(value)
+        else:
+            del query_dict[field]
+
     else:
         query_dict[field] = direction + str(value)
 

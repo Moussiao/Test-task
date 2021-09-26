@@ -59,6 +59,18 @@ coverage.xml
 *.log
 local_settings.py
 
+db.sqlite3
+
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+*backend/*/migrations/*
+!*backend/*/migrations
+!*backend/*/migrations/__init__.py
+
+media/*
+!*media
+
 # Sphinx documentation
 docs/_build/
 

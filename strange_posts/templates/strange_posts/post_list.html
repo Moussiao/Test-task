@@ -1,0 +1,108 @@
+{% extends 'strange_posts/base.html' %}
+{% load post_tags %}
+
+{% block search_form %}
+    <form action="{% url 'home' %}" method="get" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+        <input type="search" placeholder="Search..." name="search" aria-label="Search" class="form-control form-control-dark">
+    </form>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if search %}
+            <div class="mb-4 {% if posts %}text-primary{% else %}text-danger{% endif %}">
+                <h4>
+                    <a href="?{% url_replace view.request 'search' '' %}">
+                        <button type="button" class="btn-close btn-sm btn-outline-danger"></button>
+                    </a>
+                    Search Results For "{{ search }}"
+                </h4>
+            </div>
+        {% endif %}
+
+        {% if posts %}
+            <table id="table_id" class="table table-hover table-bordered border-dark">
+                <caption>All posts from users</caption>
+                <thead>
+                <tr>
+                    <th scope="col"><a href="?{% url_replace view.request 'order_by' 'pk' %}">id</a></th>
+                    <th scope="col"><a href="?{% url_replace view.request 'order_by' 'user__username' %}">Имя
+                        пользователя</a></th>
+                    <th scope="col"><a href="?{% url_replace view.request 'order_by' 'title' %}">Тема поста</a></th>
+                    <th scope="col"><a href="?{% url_replace view.request 'order_by' 'body' %}">Текст поста</a></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for p in posts %}
+                    <tr>
+                        <th class="sorting" scope="row">{{ p.pk }}</th>
+                        <td><a href="{{ p.user.get_absolute_url }}">{{ p.user.username }}</a></td>
+                        <td>{{ p.title }}</td>
+                        <td>
+                            <a>{{ p.body|truncatewords:50 }}</a>
+                            <div class="d-grid justify-content-md-end">
+                                <a class="btn btn-outline-primary btn-sm" href="{{ p.get_absolute_url }}" role="button">Читать
+                                    пост</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        <!-- Постраничная навигация -->
+        {% if page_obj.has_other_pages %}
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    {% if page_obj.number|add:'-3' > 1 %}
+                        <li class="pagination__item">
+                            <a class="pagination__link" href="?{% url_replace view.request 'page' '1' %}">1</a>
+                        </li>
+                    {% endif %}
+
+                    {% if page_obj.number|add:'-3' >= 3 %}
+                        <li class="pagination__item pagination__item--dots">
+                            <a href="?{% url_replace view.request 'page' page_obj.previous_page_number|add:"-3" %}">
+                                <span class="pagination__link">• • •</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+
+                {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="pagination__item active">
+                            <a class="pagination__link" href="#">{{ i }}</a>
+                        </li>
+                    {% elif i > page_obj.number|add:'-4' and i < page_obj.number|add:'4' %}
+                        <li class="pagination__item">
+                            <a class="pagination__link" href="?{% url_replace view.request 'page' i %}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    {% if page_obj.number|add:'4' < page_obj.paginator.num_pages %}
+                        <li class="pagination__item pagination__item--dots">
+                            <a href="?{% url_replace view.request 'page' page_obj.next_page_number|add:'3' %}">
+                                <span class="pagination__link">• • •</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if page_obj.number|add:'3' < page_obj.paginator.num_pages %}
+                        <li class="pagination__item">
+                            <a class="pagination__link"
+                               href="?{% url_replace view.request 'page' page_obj.paginator.num_pages %}">
+                                {{ page_obj.paginator.num_pages }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+            <!-- Конец постраничной навигации -->
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,10 +1,12 @@
 from django.urls import path
 
-from .views import StrangePostsHome, GetUser, ShowPost, UserPostsDynamicLoad
+from . import views
 
 urlpatterns = [
-    path('', StrangePostsHome.as_view(), name='home'),
-    path('users/id<int:pk>', GetUser.as_view(), name='get_user'),
-    path('load-more-posts/', UserPostsDynamicLoad.as_view(), name='load_more_posts'),
-    path('post/<int:pk>', ShowPost.as_view(), name='post'),
+    path('', views.StrangePostsHome.as_view(), name='home'),
+    path('login/', views.LoginUser.as_view(), name='login'),
+    path('logout/', views.logout_user, name='logout'),
+    path('load-more-posts/', views.UserPostsDynamicLoad.as_view(), name='load_more_posts'),
+    path('users/id<int:pk>', views.GetUser.as_view(), name='get_user'),
+    path('post/<int:pk>', views.ShowPost.as_view(), name='post'),
 ]
