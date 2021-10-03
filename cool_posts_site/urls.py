@@ -6,6 +6,7 @@ from cool_posts_site import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('my_clients.urls')),
     path('', include('strange_posts.urls'))
 ]
 
